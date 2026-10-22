@@ -46,7 +46,7 @@
           </tr>
         </tbody>
       </table>
-      <div v-else-if="!loading" class="empty">暂无联系人，点击右上角“新建联系人”添加</div>
+      <div v-else-if="!loading" class="empty">暂无联系人，点击右上角"新建联系人"添加</div>
       <div v-else class="empty">加载中...</div>
     </div>
 
