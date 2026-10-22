@@ -269,3 +269,24 @@ body {
 .fade-leave-to {
   opacity: 0;
 }
+
+/* 分页 */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.pagination .btn:disabled {
+  color: #c0c4cc;
+  cursor: not-allowed;
+  background: #f5f7fa;
+  border-color: #ebeef5;
+}
+
+.page-info {
+  font-size: 13px;
+  color: #606266;
+}

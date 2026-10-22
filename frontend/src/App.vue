@@ -2,7 +2,7 @@
   <div class="page">
     <header class="header">
       <h1>通讯录管理系统</h1>
-      <span class="subtitle">共 {{ contacts.length }} 位联系人</span>
+      <span class="subtitle">共 {{ total }} 位联系人</span>
     </header>
 
     <!-- 工具栏 -->
@@ -48,6 +48,13 @@
       </table>
       <div v-else-if="!loading" class="empty">暂无联系人，点击右上角"新建联系人"添加</div>
       <div v-else class="empty">加载中...</div>
+    </div>
+
+    <!-- 分页 -->
+    <div class="pagination" v-if="total > pageSize">
+      <button class="btn" :disabled="page <= 1" @click="changePage(page - 1)">上一页</button>
+      <span class="page-info">第 {{ page }} / {{ totalPages }} 页，共 {{ total }} 条</span>
+      <button class="btn" :disabled="page >= totalPages" @click="changePage(page + 1)">下一页</button>
     </div>
 
     <!-- 编辑/新建弹窗 -->
@@ -96,12 +103,16 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { contactApi } from './api'
 
 const contacts = ref([])
 const loading = ref(false)
 const keyword = ref('')
+const page = ref(1)
+const pageSize = 20
+const total = ref(0)
+const totalPages = computed(() => Math.ceil(total.value / pageSize))
 
 const dialogVisible = ref(false)
 const isEdit = ref(false)
@@ -121,12 +132,14 @@ function showToast(message, type = 'success') {
 }
 
 // 加载列表
-async function fetchContacts(search = '') {
+async function fetchContacts() {
   loading.value = true
   try {
-    const params = search ? { search } : {}
+    const params = { page: page.value }
+    if (keyword.value) params.search = keyword.value
     const { data } = await contactApi.list(params)
-    contacts.value = data
+    contacts.value = data.results
+    total.value = data.count
   } catch (e) {
     showToast('加载失败，请检查后端服务', 'error')
   } finally {
@@ -138,7 +151,17 @@ async function fetchContacts(search = '') {
 let searchTimer = null
 function onSearchInput() {
   clearTimeout(searchTimer)
-  searchTimer = setTimeout(() => fetchContacts(keyword.value), 300)
+  searchTimer = setTimeout(() => {
+    page.value = 1
+    fetchContacts()
+  }, 300)
+}
+
+// 切换分页
+function changePage(p) {
+  if (p < 1 || p > totalPages.value) return
+  page.value = p
+  fetchContacts()
 }
 
 // 打开新建
@@ -196,7 +219,7 @@ async function onSubmit() {
       showToast('创建成功')
     }
     closeDialog()
-    fetchContacts(keyword.value)
+    fetchContacts()
   } catch (e) {
     const data = e.response?.data
     if (data && typeof data === 'object') {
@@ -220,7 +243,7 @@ async function onDelete(c) {
   try {
     await contactApi.remove(c.id)
     showToast('删除成功')
-    fetchContacts(keyword.value)
+    fetchContacts()
   } catch (e) {
     showToast('删除失败', 'error')
   }
