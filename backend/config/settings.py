@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-@92n!om8%bffn3pft))umt+8@c825nyj)aq1!0l66yb5zt^sg%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['ecs.fuxi.space', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -129,3 +129,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,
 }
+
+# 静态文件与媒体文件（生产部署，collectstatic 收集到 STATIC_ROOT）
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = 'media/'

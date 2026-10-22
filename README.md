@@ -24,6 +24,10 @@ txl_mgmt/
 │       ├── views.py             # ViewSet（CRUD / 搜索 / 排序）
 │       ├── urls.py              # RESTful 路由
 │       └── management/commands/seed_contacts.py  # 测试数据生成命令
+├── deploy/                      # 部署配置
+│   ├── nginx/txl_mgmt.conf      # Nginx 站点配置（include 方式）
+│   ├── gunicorn.service         # gunicorn systemd 服务
+│   └── deploy.sh                # 一键部署脚本
 └── frontend/                    # Vue3 前端
     ├── vite.config.js           # 开发代理 /api → 8000
     └── src/
@@ -129,3 +133,75 @@ npm run dev
 | remark | TextField | 备注（可空） |
 | created_at | DateTimeField | 创建时间（自动） |
 | updated_at | DateTimeField | 更新时间（自动） |
+
+## 生产部署（Ubuntu + Nginx + gunicorn + HTTPS）
+
+架构：Nginx（HTTPS，监听 14200 端口）托管前端静态文件，并将 `/api`、`/admin` 反向代理到 gunicorn（`127.0.0.1:8000`）。
+
+### 1. 部署目录
+
+假设项目部署在 `/var/www/txl_mgmt`：
+
+```bash
+git clone https://github.com/smalldegree/txl_mgmt.git /var/www/txl_mgmt
+```
+
+### 2. 申请 SSL 证书（Let's Encrypt）
+
+```bash
+sudo apt install -y certbot
+sudo certbot certonly --standalone -d ecs.fuxi.space
+```
+
+> 提示：`--standalone` 会临时占用 80 端口完成域名验证，验证完成后自动释放。证书生成在 `/etc/letsencrypt/live/ecs.fuxi.space/`。
+
+### 3. 一键部署
+
+```bash
+cd /var/www/txl_mgmt
+sudo bash deploy/deploy.sh
+```
+
+脚本会自动完成：安装后端依赖 → 数据库迁移 → 收集静态文件 → 构建前端 → 安装 gunicorn 服务 → 安装 Nginx 配置。
+
+### 4. Nginx 配置（include 方式）
+
+站点配置文件 [deploy/nginx/txl_mgmt.conf](deploy/nginx/txl_mgmt.conf) 采用独立文件，由主配置 include 引入：
+
+```bash
+# 方式一：放入 conf.d（Ubuntu 主配置已默认 include /etc/nginx/conf.d/*.conf）
+sudo cp deploy/nginx/txl_mgmt.conf /etc/nginx/conf.d/txl_mgmt.conf
+
+# 方式二：使用 sites-available / sites-enabled
+sudo cp deploy/nginx/txl_mgmt.conf /etc/nginx/sites-available/txl_mgmt
+sudo ln -s /etc/nginx/sites-available/txl_mgmt /etc/nginx/sites-enabled/
+```
+
+校验并重载：
+
+```bash
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+### 5. 服务管理
+
+```bash
+# gunicorn 后端
+sudo systemctl status txl_mgmt
+sudo systemctl restart txl_mgmt
+
+# nginx
+sudo systemctl status nginx
+```
+
+### 6. 访问
+
+- 前端页面：`https://ecs.fuxi.space:14200`
+- 管理后台：`https://ecs.fuxi.space:14200/admin`
+
+### 生产环境注意事项
+
+- 修改 [settings.py](backend/config/settings.py) 中 `DEBUG = False`、替换 `SECRET_KEY`
+- `ALLOWED_HOSTS` 已配置为 `ecs.fuxi.space`
+- 防火墙需放行 14200 端口：`sudo ufw allow 14200/tcp`
