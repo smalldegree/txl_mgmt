@@ -204,3 +204,4 @@ sudo systemctl status nginx
 - 修改 [settings.py](backend/config/settings.py) 中 `DEBUG = False`、替换 `SECRET_KEY`
 - `ALLOWED_HOSTS` 已配置为 `ecs.xunwu.work`
 - 防火墙需放行 14200 端口：`sudo ufw allow 14200/tcp`
+- gunicorn 服务当前以 `root` 运行（见 `deploy/gunicorn.service`），简单部署方便；若要符合最小权限原则，建议改回非特权用户（如 `www-data`）并对项目/数据库目录做相应的 chown
