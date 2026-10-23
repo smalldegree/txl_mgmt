@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # 通讯录管理系统部署脚本（Ubuntu + Nginx + gunicorn）
 # 用法：sudo bash deploy/deploy.sh
+# 全新部署：默认清理 venv / node_modules / dist / staticfiles / __pycache__ 等旧环境残留
+# 如需连数据库一起清空：CLEAN_DB=1 sudo bash deploy/deploy.sh
 
 set -euo pipefail
 
@@ -9,6 +11,19 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 APP_ROOT="${APP_ROOT:-$(dirname "$SCRIPT_DIR")}"
 DOMAIN="ecs.fuxi.space"
 PORT="14200"
+
+# 0. 清理旧环境（全新部署，不留上次残留）
+echo "==> 0. 清理旧环境"
+rm -rf "$APP_ROOT/backend/venv"
+rm -rf "$APP_ROOT/backend/staticfiles"
+rm -rf "$APP_ROOT/frontend/node_modules"
+rm -rf "$APP_ROOT/frontend/dist"
+find "$APP_ROOT/backend" -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+if [ "${CLEAN_DB:-0}" = "1" ]; then
+    echo "==> 清空数据库（CLEAN_DB=1）"
+    rm -f "$APP_ROOT/backend/db.sqlite3"
+    rm -rf "$APP_ROOT/backend/media"
+fi
 
 echo "==> 1. 准备后端虚拟环境"
 cd "$APP_ROOT/backend"

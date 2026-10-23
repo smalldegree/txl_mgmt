@@ -162,7 +162,10 @@ cd /var/www/txl_mgmt
 sudo bash deploy/deploy.sh
 ```
 
-脚本会自动完成：安装后端依赖 → 数据库迁移 → 收集静态文件 → 构建前端 → 安装 gunicorn 服务 → 安装 Nginx 配置。
+脚本会自动完成：清理旧环境 → 安装后端依赖 → 数据库迁移 → 收集静态文件 → 构建前端 → 安装 gunicorn 服务 → 安装 Nginx 配置。
+
+> 脚本默认**全新部署**，会清理上次的 `venv`、`node_modules`、`dist`、`staticfiles`、`__pycache__` 等旧环境残留（数据库默认保留）。
+> 如需连数据库一起清空（删除所有数据）：`CLEAN_DB=1 sudo bash deploy/deploy.sh`
 
 ### 4. Nginx 配置（include 方式）
 
