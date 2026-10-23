@@ -44,6 +44,11 @@ npm install
 npm run build
 
 echo "==> 4. 安装 gunicorn systemd 服务"
+# 修正项目目录属主（保证 www-data 可读取代码、可写 sqlite/媒体；venv 默认权限即可，无需改）
+chown -R www-data:www-data "$APP_ROOT"
+# 保证 www-data 对上级路径有可穿越（x）权限
+chmod o+x "$(dirname "$APP_ROOT")" "$(dirname "$(dirname "$APP_ROOT")")" 2>/dev/null || true
+
 cp "$APP_ROOT/deploy/gunicorn.service" /etc/systemd/system/txl_mgmt.service
 sed -i "s|/var/www/html/txl_mgmt|$APP_ROOT|g" /etc/systemd/system/txl_mgmt.service
 systemctl daemon-reload

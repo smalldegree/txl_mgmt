@@ -8,7 +8,7 @@ User=www-data
 Group=www-data
 WorkingDirectory=/var/www/html/txl_mgmt/backend
 Environment="DJANGO_SETTINGS_MODULE=config.settings"
-ExecStart=/var/www/html/txl_mgmt/backend/venv/bin/gunicorn config.wsgi:application --chdir /var/www/html/txl_mgmt/backend --bind 127.0.0.1:8000 --workers 3 --threads 2 --timeout 60
+ExecStart=/var/www/html/txl_mgmt/backend/venv/bin/python -m gunicorn config.wsgi:application --chdir /var/www/html/txl_mgmt/backend --bind 127.0.0.1:8000 --workers 3 --threads 2 --timeout 60
 Restart=always
 RestartSec=5
 
