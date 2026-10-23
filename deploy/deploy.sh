@@ -29,6 +29,8 @@ echo "==> 1. 准备后端虚拟环境"
 cd "$APP_ROOT/backend"
 python3 -m venv venv
 source venv/bin/activate
+# 配置 pip 镜像源（默认清华源，可用 PIP_INDEX_URL 环境变量覆盖）
+export PIP_INDEX_URL="${PIP_INDEX_URL:-https://pypi.tuna.tsinghua.edu.cn/simple}"
 pip install --upgrade pip
 pip install -r requirements.txt
 
