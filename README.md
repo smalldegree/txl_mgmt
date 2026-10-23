@@ -6,7 +6,7 @@
 
 | 模块 | 技术 |
 |------|------|
-| 后端 | Python 3.10.14 · Django 5.2.18 · Django REST Framework · SQLite3 |
+| 后端 | Python 3.10.14 · Django 4.0 · Django REST Framework · SQLite3 |
 | 前端 | Vue 3 · Vite 5 · axios |
 | 环境 | pyenv 虚拟环境 |
 
