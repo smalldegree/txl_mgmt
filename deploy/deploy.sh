@@ -45,7 +45,7 @@ npm run build
 
 echo "==> 4. 安装 gunicorn systemd 服务"
 cp "$APP_ROOT/deploy/gunicorn.service" /etc/systemd/system/txl_mgmt.service
-sed -i "s|/var/www/txl_mgmt|$APP_ROOT|g" /etc/systemd/system/txl_mgmt.service
+sed -i "s|/var/www/html/txl_mgmt|$APP_ROOT|g" /etc/systemd/system/txl_mgmt.service
 systemctl daemon-reload
 systemctl enable --now txl_mgmt.service
 

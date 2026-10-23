@@ -140,10 +140,10 @@ npm run dev
 
 ### 1. 部署目录
 
-假设项目部署在 `/var/www/txl_mgmt`：
+假设项目部署在 `/var/www/html/txl_mgmt`：
 
 ```bash
-git clone https://github.com/smalldegree/txl_mgmt.git /var/www/txl_mgmt
+git clone https://github.com/smalldegree/txl_mgmt.git /var/www/html/txl_mgmt
 ```
 
 ### 2. 申请 SSL 证书（Let's Encrypt）
@@ -158,7 +158,7 @@ sudo certbot certonly --standalone -d ecs.fuxi.space
 ### 3. 一键部署
 
 ```bash
-cd /var/www/txl_mgmt
+cd /var/www/html/txl_mgmt
 sudo bash deploy/deploy.sh
 ```
 
