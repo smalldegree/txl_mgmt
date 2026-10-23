@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-@92n!om8%bffn3pft))umt+8@c825nyj)aq1!0l66yb5zt^sg%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ecs.fuxi.space', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['ecs.xunwu.work', '127.0.0.1', 'localhost']
 
 
 # Application definition

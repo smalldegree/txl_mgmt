@@ -9,7 +9,7 @@ set -euo pipefail
 # 部署根目录（自动检测脚本位置：脚本位于 <project>/deploy/deploy.sh，也可用 APP_ROOT 环境变量覆盖）
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 APP_ROOT="${APP_ROOT:-$(dirname "$SCRIPT_DIR")}"
-DOMAIN="ecs.fuxi.space"
+DOMAIN="ecs.xunwu.work"
 PORT="14200"
 
 # 0. 清理旧环境（全新部署，不留上次残留）

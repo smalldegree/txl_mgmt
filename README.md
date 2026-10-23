@@ -150,10 +150,10 @@ git clone https://github.com/smalldegree/txl_mgmt.git /var/www/html/txl_mgmt
 
 ```bash
 sudo apt install -y certbot
-sudo certbot certonly --standalone -d ecs.fuxi.space
+sudo certbot certonly --standalone -d ecs.xunwu.work
 ```
 
-> 提示：`--standalone` 会临时占用 80 端口完成域名验证，验证完成后自动释放。证书生成在 `/etc/letsencrypt/live/ecs.fuxi.space/`。
+> 提示：`--standalone` 会临时占用 80 端口完成域名验证，验证完成后自动释放。证书生成在 `/etc/letsencrypt/live/ecs.xunwu.work/`。
 
 ### 3. 一键部署
 
@@ -196,11 +196,11 @@ sudo systemctl status nginx
 
 ### 6. 访问
 
-- 前端页面：`https://ecs.fuxi.space:14200`
-- 管理后台：`https://ecs.fuxi.space:14200/admin`
+- 前端页面：`https://ecs.xunwu.work:14200`
+- 管理后台：`https://ecs.xunwu.work:14200/admin`
 
 ### 生产环境注意事项
 
 - 修改 [settings.py](backend/config/settings.py) 中 `DEBUG = False`、替换 `SECRET_KEY`
-- `ALLOWED_HOSTS` 已配置为 `ecs.fuxi.space`
+- `ALLOWED_HOSTS` 已配置为 `ecs.xunwu.work`
 - 防火墙需放行 14200 端口：`sudo ufw allow 14200/tcp`
