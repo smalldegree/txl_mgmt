@@ -31,8 +31,9 @@ sed -i "s|/var/www/txl_mgmt|$APP_ROOT|g" /etc/systemd/system/txl_mgmt.service
 systemctl daemon-reload
 systemctl enable --now txl_mgmt.service
 
-echo "==> 5. 安装 Nginx 站点配置（include 方式）"
-cp "$APP_ROOT/deploy/nginx/txl_mgmt.conf" "/etc/nginx/conf.d/txl_mgmt.conf"
+echo "==> 5. 安装 Nginx 站点配置（sites-available / sites-enabled 方式）"
+cp "$APP_ROOT/deploy/nginx/txl_mgmt.conf" "/etc/nginx/sites-available/txl_mgmt"
+ln -sf /etc/nginx/sites-available/txl_mgmt /etc/nginx/sites-enabled/txl_mgmt
 nginx -t && systemctl reload nginx
 
 echo "==> 部署完成"

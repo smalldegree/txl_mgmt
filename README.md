@@ -166,13 +166,9 @@ sudo bash deploy/deploy.sh
 
 ### 4. Nginx 配置（include 方式）
 
-站点配置文件 [deploy/nginx/txl_mgmt.conf](deploy/nginx/txl_mgmt.conf) 采用独立文件，由主配置 include 引入：
+站点配置文件 [deploy/nginx/txl_mgmt.conf](deploy/nginx/txl_mgmt.conf) 采用独立文件，放入 sites-available 并通过软链启用（Ubuntu 主配置默认 include `/etc/nginx/sites-enabled/*`）：
 
 ```bash
-# 方式一：放入 conf.d（Ubuntu 主配置已默认 include /etc/nginx/conf.d/*.conf）
-sudo cp deploy/nginx/txl_mgmt.conf /etc/nginx/conf.d/txl_mgmt.conf
-
-# 方式二：使用 sites-available / sites-enabled
 sudo cp deploy/nginx/txl_mgmt.conf /etc/nginx/sites-available/txl_mgmt
 sudo ln -s /etc/nginx/sites-available/txl_mgmt /etc/nginx/sites-enabled/
 ```
