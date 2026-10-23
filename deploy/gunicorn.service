@@ -4,8 +4,8 @@ After=network.target
 
 [Service]
 Type=simple
-User=www-data
-Group=www-data
+User=root
+Group=root
 WorkingDirectory=/var/www/html/txl_mgmt/backend
 Environment="DJANGO_SETTINGS_MODULE=config.settings"
 ExecStart=/var/www/html/txl_mgmt/backend/venv/bin/python -m gunicorn config.wsgi:application --chdir /var/www/html/txl_mgmt/backend --bind 127.0.0.1:8000 --workers 3 --threads 2 --timeout 60
